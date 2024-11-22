@@ -1,0 +1,37 @@
+{% extends "_base.html" %}
+{% block title %}Search{% endblock title %}
+
+{% block content %}
+
+{% if blog_list %}
+<h1>Search Result(s)</h1>
+{% for blog in blog_list %}
+<div class="card mb-3" style="max-width: 100%;">
+  <div class="row g-0">
+    <div class="col-md-4">
+      {% if blog.cover_img %}
+      <img src="{{ blog.cover_img.url }}" class="img-fluid rounded-start blogimg" alt="...">
+      {% endif %}
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h2 class="card-title">{{ blog.title }}</h2>
+        <p class="card-text">{{ blog.content|slice:":200" }}{% if blog.content|length > 200 %}...{% endif %}</p>
+
+        <div class="">
+          <a href="{{ blog.get_absolute_url }}" class="btn btn-outline-primary mr-2">Read more</a>
+          {% if blog.author == user %}
+            <a href="{% url "blog_edit" blog.id %}" class="btn btn-outline-success mr-2">Edit</a>
+            <a href="{% url "blog_delete" blog.id %}" class="btn btn-outline-danger mr-2">Delete</a>
+            {% endif %}
+        </div>        
+        <small>Posted by {{ blog.author }} on {{ blog.publish_date|date:"M d, Y, P" }}</small>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% else %}
+<h3>Sorry, Results not found for your search.</h3>
+{% endif %}
+{% endblock content %}

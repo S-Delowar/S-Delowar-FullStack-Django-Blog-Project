@@ -1,0 +1,20 @@
+h1 {
+    color: tomato
+}
+
+.blog_card {
+    border: 2px solid rgb(5, 228, 5) !important;  /* Specified border thickness, style, and color */
+    box-shadow: 2px 10px 15px lightgray;
+    border-radius: 5px;
+}
+
+.blog_img {
+    height: 250px;
+    width: 100%; 
+    object-fit: cover;
+}
+
+.blog_cover_img {
+    height: 500px;
+    width: 100%;
+}

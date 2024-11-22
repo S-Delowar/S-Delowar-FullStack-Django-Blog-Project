@@ -1,0 +1,41 @@
+{% extends "_base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Blog Detail{% endblock title %}
+{% block content %}
+
+<h3>{{ blog.title }}</h3>
+{% if blog.cover_img %}
+<img src="{{ blog.cover_img.url}}" class="blog_cover_img mt-2 mb-2" alt="">
+{% endif %}
+<p>{{ blog.content }}</p>
+<small>Likes({{ likes.count}}), Comments({{ comments.count }})</small>
+
+{% comment %} Like/Unlike button {% endcomment %}
+<form method="POST">
+    {% csrf_token %}
+    {% if user.is_authenticated %}
+        {% if user_has_liked %}
+            <button type="submit" name="like" class="btn btn-danger mb-2">Unlike</button>
+        {% else %}
+            <button type="submit" name="like" class="btn btn-success">Like</button>
+        {% endif %}
+    {% else %}
+        <a href="{% url "account_login" %}?next={{ request.path }}">Login to like this post </a>
+    {% endif %}
+</form>
+
+<h5>Comments:</h5>
+<ul>
+{% for comment in comments %}
+<li>{{ comment.content }}</li>
+<small>[Commented by {{comment.user}} at {{comment.comment_date.date}}]</small>
+{% endfor %}
+</ul>
+<h3>Leave a comment.</h3>
+<form method="POST">
+    {% csrf_token %}
+    {{ form | crispy }}
+    <button type="submit" class="btn btn-primary mb-4">Submit</button>
+</form>
+
+{% endblock content %}

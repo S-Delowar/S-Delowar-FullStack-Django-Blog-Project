@@ -1,0 +1,57 @@
+{% extends "_base.html" %}
+{% load static %}
+{% block title %}Blogs{% endblock title %}
+
+{% block content %}
+<a href="{% url "blog_create" %}" class="btn btn-primary mb-4">Create New Blog</a>
+{% comment %} <div class="row">
+    {% for blog in blog_list %}
+        <div class="card m-2 pt-2 bg-dark text-light blog_card" style="width: 18rem;">
+          {% if blog.cover_img %}
+          <img src="{{ blog.cover_img.url }}" class="card-img-top" alt="blog_cover_image">
+          {% endif %}
+          <div class="card-body">
+            <h5 class="card-title">{{ blog.title }}</h5>
+            <p class="card-text">{{ blog.content|slice:":200" }}{% if blog.content|length > 200 %}...{% endif %}
+            </p>
+            <a href="{{ blog.get_absolute_url }}" class="btn btn-primary">Read more</a>
+
+            {% if blog.author == user %}
+            <a href="{% url "blog_edit" blog.id %}" class="btn btn-success">Edit</a>
+            <a href="{% url "blog_delete" blog.id %}" class="btn btn-danger">Delete</a>
+            {% endif %}
+          </div>
+        </div>
+    {% endfor %}
+</div> {% endcomment %}
+
+
+{% for blog in blog_list %}
+<div class="card mb-3" style="max-width: 100%;">
+  <div class="row g-0">
+    <div class="col-md-4">
+      {% if blog.cover_img %}
+      <img src="{{ blog.cover_img.url }}" class="img-fluid rounded-start blog_img" alt="...">
+      {% endif %}
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h2 class="card-title">{{ blog.title }}</h2>
+        <p class="card-text">{{ blog.content|slice:":200" }}{% if blog.content|length > 200 %}...{% endif %}</p>
+        <p><small>Likes({{ blog.likes.count}}) | Comments({{ blog.comments.count }})</small> </p>       
+        <p><small>Posted by {{ blog.author }} on {{ blog.publish_date|date:"M d, Y, P" }}</small></p>
+        <div>
+          <a href="{{ blog.get_absolute_url }}" class="btn btn-outline-primary mr-2">Read more</a>
+          {% if blog.author == user %}
+            <a href="{% url "blog_edit" blog.id %}" class="btn btn-outline-success mr-2">Edit</a>
+            <a href="{% url "blog_delete" blog.id %}" class="btn btn-outline-danger mr-2">Delete</a>
+            {% endif %}
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+{% endblock content %}

@@ -1,0 +1,15 @@
+{% extends "_base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Delete Blog{% endblock title %}
+
+{% block content %}
+
+<h3>Are you want to delete your blog with title -</h3>
+<h3><strong>{{ blog.title }}</strong></h3>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a href="{% url "blog_list" %}" class="btn btn-success">Cancel</a>
+</form>
+
+{% endblock content %}
