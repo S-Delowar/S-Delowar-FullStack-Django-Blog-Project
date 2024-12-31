@@ -23,7 +23,7 @@ The project leverages modern tools such as **Django Allauth** for user authentic
 - Styled forms using **Crispy Forms** and **Bootstrap 5**.
 
 ### Email Integration:
-- Email notifications and password resets using **SendGrid**.
+- Password verifications and resets using **SendGrid**.
 
 ### Debugging Tools:
 - Integrated **Django Debug Toolbar** for easier development debugging.
@@ -34,4 +34,3 @@ The project leverages modern tools such as **Django Allauth** for user authentic
 - WSGI server using **Gunicorn**.
 - **PostgreSQL** as the production database.
 
----
