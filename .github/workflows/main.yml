@@ -54,7 +54,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "docker-compose.yml"
+          source: "docker-compose.yml, nginx.conf"
           target: "/home/ubuntu/"
 
       - name: SSH into EC2 and Deploy
@@ -85,6 +85,7 @@ jobs:
             AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID }}
             AWS_REGION=${{ secrets.AWS_REGION }}
             ECR_REPOSITORY=${{ secrets.ECR_REPOSITORY }}
+            EC2_HOST=${{ secrets.EC2_HOST }}
             EOF
 
             # Login to aws ecr 
