@@ -226,8 +226,8 @@ CSRF_COOKIE_SECURE=env.bool('DJANGO_CSRF_COOKIE_SECURE', default=False)
 
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://13.203.102.141",
+    "http://13.203.102.141:8080",
     "http://127.0.0.1:8080",
     "http://localhost:8080",
-    "https://your-production-domain.com",
+    "http://ec2-13-203-102-141.ap-south-1.compute.amazonaws.com:8080",
 ]
