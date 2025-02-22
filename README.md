@@ -1,12 +1,16 @@
 # Django Blog Project
 
-A full-stack blog platform built with Django, designed for seamless blog creation, reading, commenting, and liking. This project is containerized using **Docker** and is deployment-ready with **Nginx**, **Gunicorn**, and **PostgreSQL**.
+A full-stack blog platform built with Django, designed for seamless blog creation, reading, commenting, and liking. This project is containerized using **Docker**, integrated with **Nginx**, **Gunicorn**, and **PostgreSQL** and tested with CI/CD pipelines using GitHub Actions for deploying on AWS cloud.
 
-The project leverages modern tools such as **Django Allauth** for user authentication, **Crispy Forms** for styled forms, **SendGrid** for email services, and **Whitenoise** for efficient static file serving.
+## CI/CD Pipeline:
+- Automated build and deployment using GitHub Actions.
+- Docker image built and pushed to AWS ECR (Elastic Container Registry).
+- Deployment to AWS EC2 instance using docker-compose.
+- Environment variables and secrets managed securely via GitHub Repository Secrets.
 
----
 
 ## Features
+The project leverages modern tools such as **Django Allauth** for user authentication, **Crispy Forms** for styled forms, **SendGrid** for email services.
 
 ### User Authentication:
 - User registration, login, and password management.
@@ -29,8 +33,7 @@ The project leverages modern tools such as **Django Allauth** for user authentic
 - Integrated **Django Debug Toolbar** for easier development debugging.
 
 ### Production-Ready Setup:
-- Static and media file management with **Whitenoise**.
-- Reverse proxy configuration using **Nginx**.
+- **Nginx** is used for reverse proxy configuration and serving static files.
 - WSGI server using **Gunicorn**.
 - **PostgreSQL** as the production database.
 
