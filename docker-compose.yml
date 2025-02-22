@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   web:
-    # image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:latest
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:latest
     build: .  # This is used locally, but in production, we override it with ECR
     command: gunicorn --bind 0.0.0.0:8000 blog_project.wsgi:application --timeout 120
     env_file:

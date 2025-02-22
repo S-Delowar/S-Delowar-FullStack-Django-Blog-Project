@@ -49,17 +49,17 @@ jobs:
           script: |
             # Create .env file dynamically with secrets and environment variables
             cat <<EOF > .env
-            DEBUG=${{ secrets.DEBUG }}
-            SECRET_KEY=${{ secrets.SECRET_KEY }}
+            DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}
             DATABASE_URL=${{ secrets.DATABASE_URL }}
             ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}
             AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            EMAIL_HOST=${{ secrets.EMAIL_HOST }}
-            EMAIL_PORT=${{ secrets.EMAIL_PORT }}
-            EMAIL_USE_TLS=${{ secrets.EMAIL_USE_TLS }}
-            EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}
-            EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}
+            
+            EMAIL_HOST=${{ secrets.DJANGO_EMAIL_HOST }}
+            EMAIL_PORT=${{ secrets.DJANGO_EMAIL_PORT }}
+            EMAIL_USE_TLS=${{ secrets.DJANGO_EMAIL_USE_TLS }}
+            EMAIL_HOST_USER=${{ secrets.DJANGO_EMAIL_HOST_USER }}
+            EMAIL_HOST_PASSWORD=${{ secrets.DJANGO_EMAIL_HOST_PASSWORD }}
             DEFAULT_FROM_EMAIL=${{ secrets.DEFAULT_FROM_EMAIL }}
             EOF
 
@@ -73,7 +73,15 @@ jobs:
             docker-compose up -d
 
             # Migrate
-            # docker-compose exec 
+            # docker-compose exec -T web python manage.py migrate
+
+            # Ensure a superuser is created (optional: you can guard it with a flag)
+            docker-compose exec -T django python manage.py shell -c "
+            from django.contrib.auth import get_user_model;
+            User = get_user_model();
+            if not User.objects.filter(username='admin').exists():
+                User.objects.create_superuser('admin', 'admin@example.com', '${{ secrets.DJANGO_SUPERUSER_PASSWORD }}');
+            "
 
             # Clean up old Docker images
             docker system prune -af
