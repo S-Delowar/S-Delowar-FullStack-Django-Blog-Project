@@ -75,8 +75,12 @@ jobs:
             # Migrate
             # docker-compose exec -T web python manage.py migrate
 
-            # Ensure a superuser is created (optional: you can guard it with a flag)
-            docker-compose exec -T django python manage.py shell -c "
+            # Collect static files
+            docker-compose exec -T web python manage.py collectstatic --noinput
+
+
+            # Ensure a superuser is created
+            docker-compose exec -T web python manage.py shell -c "
             from django.contrib.auth import get_user_model;
             User = get_user_model();
             if not User.objects.filter(username='admin').exists():

@@ -56,9 +56,6 @@ RUN mkdir -p /code/staticfiles
 # Copy project files
 COPY . .
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
-
 # Expose application port
 EXPOSE 8000
 
