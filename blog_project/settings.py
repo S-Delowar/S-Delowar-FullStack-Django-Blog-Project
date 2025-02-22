@@ -11,13 +11,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # --------------------------------------
 # Setup Environmental Variables
 import environ
-env = environ.Env()
-ENVIRONMENT = env('DJANGO_ENV', default = 'development')
 
-if ENVIRONMENT == 'production':
-    environ.Env.read_env(os.path.join(BASE_DIR, '.env.dev'))
-else:
-    environ.Env.read_env(os.path.join(BASE_DIR, '.env.prod'))
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+# ENVIRONMENT = env('DJANGO_ENV', default = 'development')
+# if ENVIRONMENT == 'production':
+#     environ.Env.read_env(os.path.join(BASE_DIR, '.env.de'))
+# else:
+#     environ.Env.read_env(os.path.join(BASE_DIR, '.env.prod'))
     
 # ----------------------------------------------------------
 DEBUG = env('DEBUG', default=False)
@@ -175,6 +177,11 @@ ACCOUNT_SESSION_REMEMBER = True
 LOGIN_REDIRECT_URL = "home"
 ACCOUNT_LOGOUT_REDIRECT = "home"
 
+# ACCOUNT_DEFAULT_HTTP_PROTOCOL = "http"
+# ACCOUNT_ADAPTER = "allauth.account.adapter.DefaultAccountAdapter"
+# SOCIALACCOUNT_ADAPTER = "allauth.socialaccount.adapter.DefaultSocialAccountAdapter"
+
+
 # Email Authentication and authorization
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = "email"
@@ -184,8 +191,9 @@ ACCOUNT_EMAIL_UNIQUE = True
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 
 # Verification of email when signing up
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_EMAIL_VERIFICATION = "optional"
+# SOCIALACCOUNT_ENABLED = False
+# SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
 
 
 # ---------------------------------------------------------------------------------------------
@@ -213,3 +221,12 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS=env.bool('DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS',
 SECURE_HSTS_PRELOAD=env.bool('DJANGO_SECURE_HSTS_PRELOAD', default=True)
 SESSION_COOKIE_SECURE=env.bool('DJANGO_SESSION_COOKIE_SECURE', default=True)
 CSRF_COOKIE_SECURE=env.bool('DJANGO_CSRF_COOKIE_SECURE', default=True)
+
+
+
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://127.0.0.1:8080",
+    "http://localhost:8080",
+    "https://your-production-domain.com",
+]

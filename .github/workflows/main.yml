@@ -1,0 +1,79 @@
+name: Deploy Django to AWS EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    name: Build and Push to ECR
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        run: |
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+
+      - name: Build and Tag Docker Image
+        run: |
+          docker build -t ${{ secrets.ECR_REPOSITORY }}:latest .
+          docker tag ${{ secrets.ECR_REPOSITORY }}:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest
+
+      - name: Push Docker Image to ECR
+        run: |
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest
+
+  deploy:
+    name: Deploy to EC2
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH into EC2 and Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # Create .env file dynamically with secrets and environment variables
+            cat <<EOF > .env
+            DEBUG=${{ secrets.DEBUG }}
+            SECRET_KEY=${{ secrets.SECRET_KEY }}
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
+            ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}
+            AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            EMAIL_HOST=${{ secrets.EMAIL_HOST }}
+            EMAIL_PORT=${{ secrets.EMAIL_PORT }}
+            EMAIL_USE_TLS=${{ secrets.EMAIL_USE_TLS }}
+            EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}
+            EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}
+            DEFAULT_FROM_EMAIL=${{ secrets.DEFAULT_FROM_EMAIL }}
+            EOF
+
+            # Login to aws ecr 
+            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+
+            # Pull the image from ECR and start the containers
+            docker-compose pull
+
+            # Run the container using the latest ECR image
+            docker-compose up -d
+
+            # Migrate
+            # docker-compose exec 
+
+            # Clean up old Docker images
+            docker system prune -af

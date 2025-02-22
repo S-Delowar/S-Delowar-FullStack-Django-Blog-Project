@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  web:
+    # image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:latest
+    build: .  # This is used locally, but in production, we override it with ECR
+    command: gunicorn --bind 0.0.0.0:8000 blog_project.wsgi:application --timeout 120
+    env_file:
+      - .env  
+    volumes:
+      - ./staticfiles:/code/staticfiles
+    depends_on:
+      - db
+    expose:
+      - 8000
+    ports:
+      - 8000:8000
+
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=trust"
+
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./staticfiles:/code/staticfiles
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:
