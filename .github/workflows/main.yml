@@ -75,11 +75,11 @@ jobs:
             AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
             
-            EMAIL_HOST=${{ secrets.DJANGO_EMAIL_HOST }}
-            EMAIL_PORT=${{ secrets.DJANGO_EMAIL_PORT }}
-            EMAIL_USE_TLS=${{ secrets.DJANGO_EMAIL_USE_TLS }}
-            EMAIL_HOST_USER=${{ secrets.DJANGO_EMAIL_HOST_USER }}
-            EMAIL_HOST_PASSWORD=${{ secrets.DJANGO_EMAIL_HOST_PASSWORD }}
+            DJANGO_EMAIL_HOST=${{ secrets.DJANGO_EMAIL_HOST }}
+            DJANGO_EMAIL_PORT=${{ secrets.DJANGO_EMAIL_PORT }}
+            DJANGO_EMAIL_USE_TLS=${{ secrets.DJANGO_EMAIL_USE_TLS }}
+            DJANGO_EMAIL_HOST_USER=${{ secrets.DJANGO_EMAIL_HOST_USER }}
+            DJANGO_EMAIL_HOST_PASSWORD=${{ secrets.DJANGO_EMAIL_HOST_PASSWORD }}
             DEFAULT_FROM_EMAIL=${{ secrets.DEFAULT_FROM_EMAIL }}
 
             AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID }}
