@@ -47,7 +47,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "docker-compose.yml"
+          source: "README.md"
           target: "/home/ubuntu/"
 
       - name: SSH into EC2 and Deploy
